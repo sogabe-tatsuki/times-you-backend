@@ -29,6 +29,19 @@ app.post("/users", async (c) => {
   return c.json(result);
 });
 
+// update user
+app.put("/users/:auth_id", async (c) => {
+  const authId = c.req.param("auth_id");
+
+  const params = await c.req.json<typeof users.$inferSelect>();
+  const db = drizzle(c.env.DB);
+  const result = await db
+    .update(users)
+    .set({ username: params.username })
+    .where(eq(users.authId, authId));
+  return c.json(result);
+});
+
 // get reports
 app.get("/users/:user_id/reports", async (c) => {
   const userId = parseInt(c.req.param("user_id"));
